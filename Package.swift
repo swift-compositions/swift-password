@@ -18,7 +18,7 @@ extension Target.Dependency {
 }
 
 let package = Package(
-    name: "swift-password-validation",
+    name: "swift-password",
     platforms: [
         .iOS(.v26),
         .macOS(.v26),
