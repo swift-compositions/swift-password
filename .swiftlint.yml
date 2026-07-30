@@ -1,13 +1,4 @@
-disabled_rules:
-  - line_length
-  - function_body_length
-  - type_body_length
-  - file_length
-opt_in_rules:
-  - explicit_init
-  - explicit_type_interface
-included:
-  - Sources
-  - Tests
-excluded:
-  - .build
+# SwiftLint configuration for swift-password
+# Inherits from the shared parent configuration in swift-foundations
+
+parent_config: https://raw.githubusercontent.com/swift-foundations/.github/main/.swiftlint.yml
