@@ -12,12 +12,13 @@ import Testing
 @testable import PasswordValidation
 
 @Suite(
+  "README Verification",
   .dependency(\.language, .english)
 )
-struct `README Verification` {
+struct ReadmeVerificationTests {
 
-  @Test
-  func `Example from README line 47-59: Basic Usage`() throws {
+  @Test("Example from README line 47-59: Basic Usage")
+  func basicUsage() throws {
     // Use the comprehensive validator
     let validator: PasswordValidation = PasswordValidation.default
 
@@ -29,8 +30,8 @@ struct `README Verification` {
     }
   }
 
-  @Test
-  func `Example from README line 63-74: With Dependencies`() throws {
+  @Test("Example from README line 63-74: With Dependencies")
+  func withDependenciesExample() throws {
     struct LoginService {
       @Dependency(\.passwordValidation) var passwordValidation: PasswordValidation
 
@@ -49,22 +50,22 @@ struct `README Verification` {
     #expect(result == true)
   }
 
-  @Test
-  func `Example from README line 88-91: Default Validator`() throws {
+  @Test("Example from README line 88-91: Default Validator")
+  func defaultValidator() throws {
     let validator: PasswordValidation = PasswordValidation.default
     let result: Bool = try validator.validate("MySecurePass123!")
     #expect(result == true)
   }
 
-  @Test
-  func `Example from README line 97-100: Simple Validator`() throws {
+  @Test("Example from README line 97-100: Simple Validator")
+  func simpleValidator() throws {
     let validator: PasswordValidation = PasswordValidation.simple
     let result: Bool = try validator.validate("test")
     #expect(result == true)
   }
 
-  @Test
-  func `Example from README line 106-118: Custom Validation`() throws {
+  @Test("Example from README line 106-118: Custom Validation")
+  func customValidation() throws {
     let customValidator: PasswordValidation = PasswordValidation { password in
       guard password.count >= 6 else {
         throw PasswordValidation.Error.tooShort(minLength: 6)
@@ -92,8 +93,8 @@ struct `README Verification` {
     }
   }
 
-  @Test
-  func `Example from README line 124-136: Error Handling`() throws {
+  @Test("Example from README line 124-136: Error Handling")
+  func errorHandling() throws {
     var caughtCorrectError: Bool = false
 
     do {
@@ -114,51 +115,51 @@ struct `README Verification` {
     #expect(caughtCorrectError)
   }
 
-  @Suite
-  struct `Verify all error cases from README line 140-146` {
+  @Suite("Verify all error cases from README line 140-146")
+  struct ErrorCases {
 
-    @Test
-    func `tooShort error`() {
+    @Test("tooShort error")
+    func tooShortError() {
       let error: PasswordValidation.Error = PasswordValidation.Error.tooShort(minLength: 8)
       #expect(error.description.contains("at least 8 characters"))
     }
 
-    @Test
-    func `tooLong error`() {
+    @Test("tooLong error")
+    func tooLongError() {
       let error: PasswordValidation.Error = PasswordValidation.Error.tooLong(maxLength: 64)
       #expect(error.description.contains("no more than 64 characters"))
     }
 
-    @Test
-    func `missingUppercase error`() {
+    @Test("missingUppercase error")
+    func missingUppercaseError() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingUppercase
       #expect(error.description.contains("uppercase"))
     }
 
-    @Test
-    func `missingLowercase error`() {
+    @Test("missingLowercase error")
+    func missingLowercaseError() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingLowercase
       #expect(error.description.contains("lowercase"))
     }
 
-    @Test
-    func `missingDigit error`() {
+    @Test("missingDigit error")
+    func missingDigitError() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingDigit
       #expect(error.description.contains("digit"))
     }
 
-    @Test
-    func `missingSpecialCharacter error`() {
+    @Test("missingSpecialCharacter error")
+    func missingSpecialCharacterError() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingSpecialCharacter
       #expect(error.description.contains("special character"))
     }
   }
 
-  @Suite
-  struct `Verify default validator requirements from README line 80-86` {
+  @Suite("Verify default validator requirements from README line 80-86")
+  struct DefaultValidatorRequirements {
 
-    @Test
-    func `Requires 8-64 characters`() {
+    @Test("Requires 8-64 characters")
+    func requiresLengthRange() {
       let validator: PasswordValidation = PasswordValidation.default
 
       // Too short
@@ -176,8 +177,8 @@ struct `README Verification` {
       #expect(result == true)
     }
 
-    @Test
-    func `Requires uppercase letter`() {
+    @Test("Requires uppercase letter")
+    func requiresUppercase() {
       let validator: PasswordValidation = PasswordValidation.default
 
       #expect(throws: PasswordValidation.Error.missingUppercase) {
@@ -185,8 +186,8 @@ struct `README Verification` {
       }
     }
 
-    @Test
-    func `Requires lowercase letter`() {
+    @Test("Requires lowercase letter")
+    func requiresLowercase() {
       let validator: PasswordValidation = PasswordValidation.default
 
       #expect(throws: PasswordValidation.Error.missingLowercase) {
@@ -194,8 +195,8 @@ struct `README Verification` {
       }
     }
 
-    @Test
-    func `Requires digit`() {
+    @Test("Requires digit")
+    func requiresDigit() {
       let validator: PasswordValidation = PasswordValidation.default
 
       #expect(throws: PasswordValidation.Error.missingDigit) {
@@ -203,8 +204,8 @@ struct `README Verification` {
       }
     }
 
-    @Test
-    func `Requires special character`() {
+    @Test("Requires special character")
+    func requiresSpecialCharacter() {
       let validator: PasswordValidation = PasswordValidation.default
 
       #expect(throws: PasswordValidation.Error.missingSpecialCharacter) {

@@ -12,40 +12,41 @@ import Testing
 @testable import PasswordValidation
 
 @Suite(
+  "PasswordValidation Tests",
   .dependency(\.language, .english),
   .dependency(\.passwordValidation, .default)
 )
-struct `PasswordValidation Tests` {
+struct PasswordValidationTests {
 
-  @Suite
-  struct `Valid Passwords` {
+  @Suite("Valid Passwords")
+  struct ValidPasswords {
 
-    @Test
-    func `Valid password with all requirements`() async throws {
+    @Test("Valid password with all requirements")
+    func validWithAllRequirements() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let validPassword: String = "Password123!"
       #expect(try isValidPassword(validPassword) == true)
     }
 
-    @Test
-    func `Valid password with minimum length`() async throws {
+    @Test("Valid password with minimum length")
+    func validWithMinimumLength() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let validPassword: String = "Pass123!"
       #expect(try isValidPassword(validPassword) == true)
     }
 
-    @Test
-    func `Valid password with multiple special characters`() async throws {
+    @Test("Valid password with multiple special characters")
+    func validWithMultipleSpecialCharacters() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let validPassword: String = "Password123!@#$%^&*()"
       #expect(try isValidPassword(validPassword) == true)
     }
 
-    @Test
-    func `Valid password with maximum allowed length`() async throws {
+    @Test("Valid password with maximum allowed length")
+    func validWithMaximumAllowedLength() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let validPassword: String = String(repeating: "Aa1!", count: 16)  // 64 characters
@@ -53,15 +54,15 @@ struct `PasswordValidation Tests` {
     }
   }
 
-  @Suite
-  struct `Hyphen and space special characters` {
+  @Suite("Hyphen and space special characters")
+  struct HyphenAndSpaceSpecialCharacters {
 
     // Safari's and 1Password's DEFAULT generated password format is hyphenated
     // lowercase groups with one uppercase and one digit (e.g. "Xokwaq-9kotbe-ruwmoq").
     // Before the fix the hyphen was not in the special-character set, so these
     // generated passwords were rejected against the policy's own intent.
-    @Test
-    func `Safari-format hyphenated password passes validation`() async throws {
+    @Test("Safari-format hyphenated password passes validation")
+    func safariHyphenatedPasswordPasses() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       // The hyphen is the only special character here; uppercase/lowercase/digit are
@@ -70,16 +71,16 @@ struct `PasswordValidation Tests` {
       #expect(try isValidPassword(safariPassword) == true)
     }
 
-    @Test
-    func `Password whose only special character is a space passes validation`() async throws {
+    @Test("Password whose only special character is a space passes validation")
+    func spaceOnlySpecialCharacterPasses() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let spacePassword: String = "Pass word12"
       #expect(try isValidPassword(spacePassword) == true)
     }
 
-    @Test
-    func `Password with no special character at all still fails`() async throws {
+    @Test("Password with no special character at all still fails")
+    func noSpecialCharacterStillFails() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       // Same shape as the Safari password but with every special character removed:
@@ -91,11 +92,11 @@ struct `PasswordValidation Tests` {
     }
   }
 
-  @Suite
-  struct `Invalid Passwords - Length` {
+  @Suite("Invalid Passwords - Length")
+  struct InvalidPasswordsLength {
 
-    @Test
-    func `Password too short throws tooShort error`() async throws {
+    @Test("Password too short throws tooShort error")
+    func tooShortThrows() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let shortPassword: String = "Pass1!"
@@ -105,8 +106,8 @@ struct `PasswordValidation Tests` {
       }
     }
 
-    @Test
-    func `Password too long throws tooLong error`() async throws {
+    @Test("Password too long throws tooLong error")
+    func tooLongThrows() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let longPassword: String = String(repeating: "Aa1!", count: 17)  // 68 characters
@@ -116,11 +117,11 @@ struct `PasswordValidation Tests` {
     }
   }
 
-  @Suite
-  struct `Invalid Passwords - Missing Character Types` {
+  @Suite("Invalid Passwords - Missing Character Types")
+  struct InvalidPasswordsMissingCharacterTypes {
 
-    @Test
-    func `Password missing uppercase throws missingUppercase error`() async throws {
+    @Test("Password missing uppercase throws missingUppercase error")
+    func missingUppercaseThrows() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let password: String = "password123!"
@@ -129,8 +130,8 @@ struct `PasswordValidation Tests` {
       }
     }
 
-    @Test
-    func `Password missing lowercase throws missingLowercase error`() async throws {
+    @Test("Password missing lowercase throws missingLowercase error")
+    func missingLowercaseThrows() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let password: String = "PASSWORD123!"
@@ -140,8 +141,8 @@ struct `PasswordValidation Tests` {
       }
     }
 
-    @Test
-    func `Password missing digit throws missingDigit error`() async throws {
+    @Test("Password missing digit throws missingDigit error")
+    func missingDigitThrows() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let password: String = "Password!"
@@ -151,8 +152,8 @@ struct `PasswordValidation Tests` {
       }
     }
 
-    @Test
-    func `Password missing special character throws missingSpecialCharacter error`() async throws {
+    @Test("Password missing special character throws missingSpecialCharacter error")
+    func missingSpecialCharacterThrows() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let password: String = "Password123"
@@ -163,51 +164,51 @@ struct `PasswordValidation Tests` {
     }
   }
 
-  @Suite
-  struct `PasswordValidation.Error Tests` {
+  @Suite("PasswordValidation.Error Tests")
+  struct ErrorTests {
 
-    @Test
-    func `TooShort error has correct description`() {
+    @Test("TooShort error has correct description")
+    func tooShortDescription() {
       let error: PasswordValidation.Error = PasswordValidation.Error.tooShort(minLength: 8)
       #expect(error.description.contains("at least 8 characters"))
     }
 
-    @Test
-    func `TooLong error has correct description`() {
+    @Test("TooLong error has correct description")
+    func tooLongDescription() {
       let error: PasswordValidation.Error = PasswordValidation.Error.tooLong(maxLength: 64)
       #expect(error.description.contains("no more than 64 characters"))
     }
 
-    @Test
-    func `MissingUppercase error has correct description`() {
+    @Test("MissingUppercase error has correct description")
+    func missingUppercaseDescription() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingUppercase
       #expect(error.description.contains("uppercase letter"))
     }
 
-    @Test
-    func `MissingLowercase error has correct description`() {
+    @Test("MissingLowercase error has correct description")
+    func missingLowercaseDescription() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingLowercase
       #expect(error.description.contains("lowercase letter"))
     }
 
-    @Test
-    func `MissingDigit error has correct description`() {
+    @Test("MissingDigit error has correct description")
+    func missingDigitDescription() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingDigit
       #expect(error.description.contains("digit"))
     }
 
-    @Test
-    func `MissingSpecialCharacter error has correct description`() {
+    @Test("MissingSpecialCharacter error has correct description")
+    func missingSpecialCharacterDescription() {
       let error: PasswordValidation.Error = PasswordValidation.Error.missingSpecialCharacter
       #expect(error.description.contains("special character"))
     }
   }
 
-  @Suite
-  struct `Edge Cases` {
+  @Suite("Edge Cases")
+  struct EdgeCases {
 
-    @Test
-    func `Empty password throws tooShort error`() async throws {
+    @Test("Empty password throws tooShort error")
+    func emptyPasswordThrowsTooShort() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let emptyPassword: String = ""
@@ -217,24 +218,24 @@ struct `PasswordValidation Tests` {
       }
     }
 
-    @Test
-    func `Password with Unicode characters`() async throws {
+    @Test("Password with Unicode characters")
+    func unicodeCharacters() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let unicodePassword: String = "Pássword123!"
       #expect(try isValidPassword(unicodePassword) == true)
     }
 
-    @Test
-    func `Password with all allowed special characters`() async throws {
+    @Test("Password with all allowed special characters")
+    func allAllowedSpecialCharacters() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let password: String = "Password123!&^%$#@()/"
       #expect(try isValidPassword(password) == true)
     }
 
-    @Test
-    func `Password with spaces`() async throws {
+    @Test("Password with spaces")
+    func passwordWithSpaces() async throws {
       @Dependency(\.passwordValidation.validate) var isValidPassword:
         @Sendable (String) throws -> Bool
       let password: String = "Pass word123!"
