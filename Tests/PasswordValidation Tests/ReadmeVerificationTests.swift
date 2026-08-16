@@ -66,7 +66,8 @@ struct ReadmeVerificationTests {
 
     @Test("Example from README line 106-118: Custom Validation")
     func customValidation() throws {
-        let customValidator: PasswordValidation = PasswordValidation { (password: String) throws(PasswordValidation.Error) -> Bool in
+        let customValidator: PasswordValidation = PasswordValidation {
+            (password: String) throws(PasswordValidation.Error) -> Bool in
             guard password.count >= 6 else {
                 throw PasswordValidation.Error.tooShort(minLength: 6)
             }
