@@ -60,7 +60,7 @@ extension PasswordValidation {
     /// try validator.validate("MySecurePass123!") // Returns true
     /// ```
     public static var `default`: Self {
-        .init { password in
+        .init { (password: String) throws(PasswordValidation.Error) -> Bool in
             let minLength: Int = 8
             let maxLength: Int = 64
 
@@ -111,7 +111,7 @@ extension PasswordValidation {
     /// try validator.validate("test") // Returns true
     /// ```
     public static var simple: Self {
-        .init { password in
+        .init { (password: String) throws(PasswordValidation.Error) -> Bool in
             guard password.count >= 4 else {
                 throw PasswordValidation.Error.tooShort(minLength: 4)
             }
