@@ -20,12 +20,12 @@ extension Target.Dependency {
 let package = Package(
     name: "swift-password",
     platforms: [
-        .iOS(.v26),
-        .macOS(.v26),
+        .iOS("27"),
+        .macOS("27"),
         .macCatalyst(.v26),
-        .tvOS(.v26),
-        .watchOS(.v26),
-        .visionOS(.v26)
+        .tvOS("27"),
+        .watchOS("27"),
+        .visionOS("27")
     ],
     products: [
         .library(name: .passwordValidation, targets: [.passwordValidation]),
