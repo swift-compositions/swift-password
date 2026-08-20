@@ -1,4 +1,4 @@
-// swift-tools-version: 6.3.3
+// swift-tools-version: 6.4
 
 import PackageDescription
 
@@ -12,28 +12,38 @@ extension Target.Dependency {
 
 extension Target.Dependency {
     static var translating: Self { .product(name: "Translating", package: "swift-translating") }
-    static var translatingDependencies: Self { .product(name: "Translating Dependencies", package: "swift-translating-dependencies") }
+    static var translatingDependencies: Self {
+        .product(name: "Translating Dependencies", package: "swift-translating-dependencies")
+    }
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
-    static var dependenciesTestSupport: Self { .product(name: "Dependencies Test Support", package: "swift-dependencies") }
+    static var dependenciesTestSupport: Self {
+        .product(name: "Dependencies Test Support", package: "swift-dependencies")
+    }
 }
 
 let package = Package(
     name: "swift-password",
     platforms: [
-        .iOS("27"),
-        .macOS("27"),
-        .macCatalyst(.v26),
-        .tvOS("27"),
-        .watchOS("27"),
-        .visionOS("27")
+        .iOS(.v27),
+        .macOS(.v27),
+        .macCatalyst(.v27),
+        .tvOS(.v27),
+        .watchOS(.v27),
+        .visionOS(.v27),
     ],
     products: [
-        .library(name: .passwordValidation, targets: [.passwordValidation]),
+        .library(name: .passwordValidation, targets: [.passwordValidation])
     ],
     dependencies: [
         .package(url: "https://github.com/swift-foundations/swift-translating.git", branch: "main"),
-        .package(url: "https://github.com/swift-foundations/swift-translating-dependencies.git", branch: "main"),
-        .package(url: "https://github.com/swift-foundations/swift-dependencies.git", branch: "main")
+        .package(
+            url: "https://github.com/swift-foundations/swift-translating-dependencies.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-foundations/swift-dependencies.git",
+            branch: "main"
+        ),
     ],
     targets: [
         .target(
@@ -41,14 +51,14 @@ let package = Package(
             dependencies: [
                 .translating,
                 .translatingDependencies,
-                .dependencies
+                .dependencies,
             ]
         ),
         .testTarget(
             name: .passwordValidation.tests,
             dependencies: [
                 .passwordValidation,
-                .dependenciesTestSupport
+                .dependenciesTestSupport,
             ]
         ),
     ]
