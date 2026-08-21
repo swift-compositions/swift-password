@@ -1,35 +1,10 @@
 import Translating
 import Translating_Dependencies
 
-/// A password validation system that provides flexible validation rules.
-///
-/// `PasswordValidation` allows you to define custom password validation logic
-/// that can be used throughout your application. It provides both predefined
-/// validation rules and the ability to create custom validators.
-///
-/// ## Usage
-///
-/// ```swift
-/// let validator = PasswordValidation.default
-/// do {
-///     let isValid = try validator.validate("MyPassword123!")
-///     print("Password is valid: \(isValid)")
-/// } catch {
-///     print("Validation failed: \(error)")
-/// }
-/// ```
 public struct PasswordValidation: Sendable {
-    /// The validation closure that takes a password string and returns whether it's valid.
-    ///
-    /// - Parameter password: The password to validate
-    /// - Returns: `true` if the password is valid
-    /// - Throws: A ``PasswordValidation/Error`` if validation fails
 
     public var validate: @Sendable (_ password: String) throws(PasswordValidation.Error) -> Bool
 
-    /// Creates a new password validator with custom validation logic.
-    ///
-    /// - Parameter validate: A closure that defines the validation rules
     public init(
         validate: @Sendable @escaping (_: String) throws(PasswordValidation.Error) -> Bool
     ) {
@@ -44,37 +19,18 @@ extension PasswordValidation {
 }
 
 extension PasswordValidation {
-    /// A comprehensive password validator with standard security requirements.
-    ///
-    /// This validator enforces the following rules:
-    /// - Minimum length: 8 characters
-    /// - Maximum length: 64 characters
-    /// - Must contain at least one uppercase letter
-    /// - Must contain at least one lowercase letter
-    /// - Must contain at least one digit
-    /// - Must contain at least one special character
-    ///
-    /// ## Example
-    /// ```swift
-    /// let validator = PasswordValidation.default
-    /// try validator.validate("MySecurePass123!") // Returns true
-    /// ```
+
     public static var `default`: Self {
         .init { (password: String) throws(PasswordValidation.Error) -> Bool in
             let minLength: Int = 8
             let maxLength: Int = 64
 
-            // Regular expression patterns
             let uppercasePattern: String = ".*[A-Z]+.*"
             let lowercasePattern: String = ".*[a-z]+.*"
             let digitPattern: String = ".*[0-9]+.*"
-            // Hyphen ('-') and space (' ') are accepted specials so that the default
-            // generated-password formats of Safari and 1Password (hyphenated groups, e.g.
-            // "xokwaq-9kotbe-ruwmoq") satisfy the policy's own intent. The hyphen is placed
-            // last inside the character class so it is a literal, not a range operator.
+
             let specialCharacterPattern: String = ".*[!&^%$#@()/ -]+.*"
 
-            // Check password length
             if password.count < minLength {
                 throw PasswordValidation.Error.tooShort(minLength: minLength)
             }
@@ -82,7 +38,6 @@ extension PasswordValidation {
                 throw PasswordValidation.Error.tooLong(maxLength: maxLength)
             }
 
-            // Check for uppercase, lowercase, digit, and special character
             if !matches(pattern: uppercasePattern, in: password) {
                 throw PasswordValidation.Error.missingUppercase
             }
@@ -100,16 +55,6 @@ extension PasswordValidation {
         }
     }
 
-    /// A basic password validator with minimal requirements.
-    ///
-    /// This validator only checks for a minimum length of 4 characters,
-    /// making it suitable for testing or applications with relaxed security requirements.
-    ///
-    /// ## Example
-    /// ```swift
-    /// let validator = PasswordValidation.simple
-    /// try validator.validate("test") // Returns true
-    /// ```
     public static var simple: Self {
         .init { (password: String) throws(PasswordValidation.Error) -> Bool in
             guard password.count >= 4 else {
@@ -121,34 +66,31 @@ extension PasswordValidation {
 }
 
 private func matches(pattern: String, in text: String) -> Bool {
-    // reason: Regex.init(_:) is an untyped-throws stdlib callee (untyped-callee
-    // boundary); an unparseable pattern is a programmer error here (all patterns
-    // are local literal constants), so falling back to `false` is intentional.
-    // swiftlint:disable:next no_try_optional
+
     guard let regex = try? Regex(pattern) else { return false }
     return text.contains(regex)
 }
 
 extension PasswordValidation {
-    /// Errors that can occur during password validation.
+
     public enum Error: Swift.Error, Equatable, CustomStringConvertible {
-        /// The password is shorter than the required minimum length.
+
         case tooShort(minLength: Int)
-        /// The password exceeds the maximum allowed length.
+
         case tooLong(maxLength: Int)
-        /// The password does not contain any uppercase letters.
+
         case missingUppercase
-        /// The password does not contain any lowercase letters.
+
         case missingLowercase
-        /// The password does not contain any digits.
+
         case missingDigit
-        /// The password does not contain any special characters.
+
         case missingSpecialCharacter
     }
 }
 
 extension PasswordValidation.Error {
-    /// A localized description of the validation error.
+
     public var description: String {
         switch self {
         case .tooShort(let minLength):

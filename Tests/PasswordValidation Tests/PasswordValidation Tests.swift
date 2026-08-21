@@ -1,10 +1,3 @@
-//
-//  PasswordValidation Tests.swift
-//  coenttb-server
-//
-//  Created by Coen ten Thije Boonkkamp on 23/07/2025.
-//
-
 import Dependencies
 import Dependencies_Test_Support
 import Testing
@@ -49,7 +42,7 @@ struct PasswordValidationTests {
         func validWithMaximumAllowedLength() async throws {
             @Dependency(\.passwordValidation.validate) var isValidPassword:
                 @Sendable (String) throws(PasswordValidation.Error) -> Bool
-            let validPassword: String = String(repeating: "Aa1!", count: 16)  // 64 characters
+            let validPassword: String = String(repeating: "Aa1!", count: 16)
             #expect(try isValidPassword(validPassword) == true)
         }
     }
@@ -57,16 +50,11 @@ struct PasswordValidationTests {
     @Suite("Hyphen and space special characters")
     struct HyphenAndSpaceSpecialCharacters {
 
-        // Safari's and 1Password's DEFAULT generated password format is hyphenated
-        // lowercase groups with one uppercase and one digit (e.g. "Xokwaq-9kotbe-ruwmoq").
-        // Before the fix the hyphen was not in the special-character set, so these
-        // generated passwords were rejected against the policy's own intent.
         @Test("Safari-format hyphenated password passes validation")
         func safariHyphenatedPasswordPasses() async throws {
             @Dependency(\.passwordValidation.validate) var isValidPassword:
                 @Sendable (String) throws(PasswordValidation.Error) -> Bool
-            // The hyphen is the only special character here; uppercase/lowercase/digit are
-            // all present, so this password passes only because '-' now counts as special.
+
             let safariPassword: String = "Xokwaq-9kotbe-ruwmoq"
             #expect(try isValidPassword(safariPassword) == true)
         }
@@ -83,8 +71,7 @@ struct PasswordValidationTests {
         func noSpecialCharacterStillFails() async throws {
             @Dependency(\.passwordValidation.validate) var isValidPassword:
                 @Sendable (String) throws(PasswordValidation.Error) -> Bool
-            // Same shape as the Safari password but with every special character removed:
-            // uppercase, lowercase, and digit are present, yet it must still be rejected.
+
             let noSpecial: String = "Xokwaq9kotberuwmoq"
             #expect(throws: PasswordValidation.Error.missingSpecialCharacter) {
                 try isValidPassword(noSpecial)
@@ -110,7 +97,7 @@ struct PasswordValidationTests {
         func tooLongThrows() async throws {
             @Dependency(\.passwordValidation.validate) var isValidPassword:
                 @Sendable (String) throws(PasswordValidation.Error) -> Bool
-            let longPassword: String = String(repeating: "Aa1!", count: 17)  // 68 characters
+            let longPassword: String = String(repeating: "Aa1!", count: 17)
             #expect(throws: PasswordValidation.Error.tooLong(maxLength: 64)) {
                 try isValidPassword(longPassword)
             }

@@ -1,10 +1,3 @@
-//
-//  ReadmeVerificationTests.swift
-//  swift-password-validation
-//
-//  Created for README verification
-//
-
 import Dependencies
 import Dependencies_Test_Support
 import Testing
@@ -19,7 +12,7 @@ struct ReadmeVerificationTests {
 
     @Test("Example from README line 47-59: Basic Usage")
     func basicUsage() throws {
-        // Use the comprehensive validator
+
         let validator: PasswordValidation = PasswordValidation.default
 
         do {
@@ -79,16 +72,13 @@ struct ReadmeVerificationTests {
             return true
         }
 
-        // Test valid password
         let result: Bool = try customValidator.validate("MySecret123!")
         #expect(result == true)
 
-        // Test invalid password (contains "password")
         #expect(throws: PasswordValidation.Error.missingSpecialCharacter) {
             try customValidator.validate("mypassword123")
         }
 
-        // Test too short
         #expect(throws: PasswordValidation.Error.tooShort(minLength: 6)) {
             try customValidator.validate("Pass1")
         }
@@ -104,10 +94,10 @@ struct ReadmeVerificationTests {
             caughtCorrectError = true
             #expect(minLength == 8)
         } catch PasswordValidation.Error.missingUppercase {
-            // This is also acceptable since "weak" has multiple issues
+
             caughtCorrectError = true
         } catch PasswordValidation.Error.missingDigit {
-            // This is also acceptable since "weak" has multiple issues
+
             caughtCorrectError = true
         } catch {
             Issue.record("Unexpected error: \(error)")
@@ -163,17 +153,14 @@ struct ReadmeVerificationTests {
         func requiresLengthRange() {
             let validator: PasswordValidation = PasswordValidation.default
 
-            // Too short
             #expect(throws: PasswordValidation.Error.tooShort(minLength: 8)) {
                 try validator.validate("Pass1!")
             }
 
-            // Too long (65 characters)
             #expect(throws: PasswordValidation.Error.tooLong(maxLength: 64)) {
                 try validator.validate(String(repeating: "Aa1!", count: 17))
             }
 
-            // Valid length
             let result: Bool? = try? validator.validate("Pass123!")
             #expect(result == true)
         }
