@@ -1,7 +1,7 @@
 # .github/metadata.yaml
 description: "Composable password validation rules with localized error messages for Swift."
 topics:
-  - foundations
+  - compositions
   - password
   - validation
 homepage: "https://swift-institute.org"

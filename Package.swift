@@ -35,13 +35,13 @@ let package = Package(
         .library(name: .passwordValidation, targets: [.passwordValidation])
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-foundations/swift-translating.git", branch: "main"),
+        .package(url: "https://github.com/swift-compositions/swift-translating.git", branch: "main"),
         .package(
-            url: "https://github.com/swift-foundations/swift-translating-dependencies.git",
+            url: "https://github.com/swift-compositions/swift-translating-dependencies.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-foundations/swift-dependencies.git",
+            url: "https://github.com/swift-compositions/swift-dependencies.git",
             branch: "main"
         ),
     ],
