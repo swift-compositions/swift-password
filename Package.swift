@@ -2,25 +2,6 @@
 
 import PackageDescription
 
-extension String {
-    static let passwordValidation: Self = "PasswordValidation"
-}
-
-extension Target.Dependency {
-    static var passwordValidation: Self { .target(name: .passwordValidation) }
-}
-
-extension Target.Dependency {
-    static var translating: Self { .product(name: "Translating", package: "swift-translating") }
-    static var translatingDependencies: Self {
-        .product(name: "Translating Dependencies", package: "swift-translating-dependencies")
-    }
-    static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
-    static var dependenciesTestSupport: Self {
-        .product(name: "Dependencies Test Support", package: "swift-dependencies")
-    }
-}
-
 let package = Package(
     name: "swift-password",
     platforms: [
@@ -32,7 +13,7 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        .library(name: .passwordValidation, targets: [.passwordValidation])
+        .library(name: "PasswordValidation", targets: ["PasswordValidation"])
     ],
     dependencies: [
         .package(url: "https://github.com/swift-compositions/swift-translating.git", branch: "main"),
@@ -47,21 +28,20 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: .passwordValidation,
+            name: "PasswordValidation",
             dependencies: [
-                .translating,
-                .translatingDependencies,
-                .dependencies,
+                .product(name: "Translating", package: "swift-translating"),
+                .product(name: "Translating Dependencies", package: "swift-translating-dependencies"),
+                .product(name: "Dependencies", package: "swift-dependencies"),
             ]
         ),
         .testTarget(
-            name: .passwordValidation.tests,
+            name: "PasswordValidation Tests",
             dependencies: [
-                .passwordValidation,
-                .dependenciesTestSupport,
+                .target(name: "PasswordValidation"),
+                .product(name: "Dependencies Test Support", package: "swift-dependencies"),
             ]
         ),
     ]
 )
 
-extension String { var tests: Self { self + " Tests" } }
